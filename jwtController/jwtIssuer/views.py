@@ -17,7 +17,7 @@ import string
 import time
 
 startTime = time.time()
-rootDir = path.abspath(path.join(__file__, "../../.."))
+rootDir = path.abspath(path.join(__file__, "../../../certs"))
 JWT_PRIVATE_KEY = open(path.join(rootDir, "private.pem")).read()
 JWT_PUBLIC_KEY = open(path.join(rootDir, "public.pem")).read()
 
