@@ -14,13 +14,19 @@ import os.path as path
 import re
 import random
 import string
+import time
 
+startTime = time.time()
 rootDir = path.abspath(path.join(__file__, "../../.."))
 JWT_PRIVATE_KEY = open(path.join(rootDir, "private.pem")).read()
 JWT_PUBLIC_KEY = open(path.join(rootDir, "public.pem")).read()
 
 RESET_PASS_EMAIL_TEXT_TEMPLATE = get_template('reset_password.txt')
 RESET_PASS_EMAIL_HTML_TEMPLATE = get_template('reset_password.html')
+
+
+def liveliness(req):
+    return JsonResponse({"message": "OK", "time": int(time.time()), "uptime": time.time() - startTime}, status=200, safe=False)
 
 
 def auth(req):

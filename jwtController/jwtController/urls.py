@@ -19,6 +19,7 @@ from jwtIssuer import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('liveliness', views.liveliness, name="liveliness"),
     path('auth', views.auth, name="auth"),
     path('renew_token', views.renew_jwt_token, name="renew_jwt_token"),
     path('register', views.register, name="register"),
