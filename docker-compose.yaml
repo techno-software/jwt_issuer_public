@@ -1,14 +1,9 @@
-version: "2.2"
+version: "3"
    
 services:
-#   db:
-#     image: postgres
-#     environment:
-#       - POSTGRES_DB=postgres
-#       - POSTGRES_USER=postgres
-#       - POSTGRES_PASSWORD=postgres
     jwt:
         build: .
+        restart: always
         command: >
             bash -c " cd /project/jwtController
             && python3 manage.py makemigrations
@@ -17,8 +12,14 @@ services:
             && source /project/py-env/bin/activate
             && gunicorn jwtController.wsgi:application --bind 0.0.0.0:8000 -w 8"
         ports:
-        - "8000:80"
+        - "8000:8000"
         volumes:
             - ./certs:/project/certs
-        # depends_on:
-        #   - db
+        depends_on:
+          - postgresdb
+    postgresdb:
+        image: postgres
+        environment:
+            - POSTGRES_DB=postgres
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
