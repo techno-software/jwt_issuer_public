@@ -42,6 +42,8 @@ Don't forget to edit the password reset templates under `jwtController/jwtIssuer
 
 Don't forget to install your own certificates to use with the web-API
 
+Don't forget to set a sane configuration for CORS, follow guide [here](http://www.srikanthtechnologies.com/blog/python/enable_cors_for_django.aspx)
+
 Don't forget to edit the settings file under `jwtController/jwtController/settings.py`, more specifically:
 
 * EMAIL_BACKEND
