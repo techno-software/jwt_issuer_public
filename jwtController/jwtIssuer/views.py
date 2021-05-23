@@ -24,6 +24,8 @@ JWT_PUBLIC_KEY = open(path.join(rootDir, "public.pem")).read()
 RESET_PASS_EMAIL_TEXT_TEMPLATE = get_template('reset_password.txt')
 RESET_PASS_EMAIL_HTML_TEMPLATE = get_template('reset_password.html')
 
+COOKIE_TIME_TO_LIVE_DAYS = 14
+
 
 def liveliness(req):
     return JsonResponse({"message": "OK", "time": int(time.time()), "uptime": time.time() - startTime}, status=200, safe=False)
@@ -44,7 +46,8 @@ def auth(req):
 
             response = JsonResponse(
                 {"code": "200", "message": "User authenticated", 'token': token}, status=200, safe=False)
-            response.set_cookie("jwt_token", token)
+            cookie_expiry = datetime.now() + timedelta(days=COOKIE_TIME_TO_LIVE_DAYS)
+            response.set_cookie("jwt_token", token, expires=cookie_expiry)
             return response
         else:
             return JsonResponse({"code": "403", "message": "User not authenticated"}, status=403, safe=False)
@@ -238,7 +241,7 @@ def issueJWT(userID):
     tokenInfo = {
         "userID": userID,
         "issued": str(datetime.now()),
-        "expires": str(datetime.now() + timedelta(days=4))
+        "expires": str(datetime.now() + timedelta(days=COOKIE_TIME_TO_LIVE_DAYS))
     }
 
     token = jwt.encode(tokenInfo, JWT_PRIVATE_KEY,
