@@ -16,7 +16,7 @@ The gist of this django api is to provide a simple way to manage user logins in 
 * Takes either a `password` or a `email` (or both) in the body of the request in json form. Also requries a valid `jwt_token` cookie to be sent along with the request
 * Returns a json with a `status` field
 
-### `/renew_jwt`
+### `/renew_token`
 * Send a request with the `jwt_cookie` in the header and get a refreshed one!
 * Returns a json with a `status` and `token` field
 

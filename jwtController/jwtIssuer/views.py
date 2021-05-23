@@ -132,7 +132,9 @@ def renew_jwt_token(req):
 
                 response = JsonResponse(
                     {"code": "200", "message": "User authenticated", 'token': new_token}, status=200, safe=False)
-                response.set_cookie("jwt_token", new_token)
+                cookie_expiry = datetime.now() + timedelta(days=COOKIE_TIME_TO_LIVE_DAYS)
+                response.set_cookie("jwt_token", new_token,
+                                    expires=cookie_expiry)
                 return response
             else:
                 return JsonResponse({"code": "400", "message": "Invalid or missing jwt_token cookie"}, status=400, safe=False)
