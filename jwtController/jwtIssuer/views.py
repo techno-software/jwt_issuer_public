@@ -138,6 +138,8 @@ def renew_jwt_token(req):
                 return response
             else:
                 return JsonResponse({"code": "400", "message": "Invalid or missing jwt_token cookie"}, status=400, safe=False)
+        else:
+            return JsonResponse({"code": "401", "message": "JWT Cookie not included in request"}, status=401, safe=False)
     else:
         return JsonResponse({"code": "405", "message": "Bad request type, use POST method with json body for this route"}, status=405, safe=False)
 
