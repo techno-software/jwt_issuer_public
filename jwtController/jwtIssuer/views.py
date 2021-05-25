@@ -24,7 +24,7 @@ JWT_PUBLIC_KEY = open(path.join(rootDir, "public.pem")).read()
 RESET_PASS_EMAIL_TEXT_TEMPLATE = get_template('reset_password.txt')
 RESET_PASS_EMAIL_HTML_TEMPLATE = get_template('reset_password.html')
 
-COOKIE_TIME_TO_LIVE_DAYS = 14
+COOKIE_TIME_TO_LIVE_DAYS = 7
 
 
 def liveliness(req):
