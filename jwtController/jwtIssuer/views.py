@@ -18,7 +18,7 @@ import time
 
 startTime = time.time()
 rootDir = path.abspath(path.join(__file__, "../../../certs"))
-JWT_PRIVATE_KEY = open(path.join(rootDir, "private.pem")).read()
+JWT_PRIVATE_KEY = open(path.join(rootDir, "private.key")).read()
 JWT_PUBLIC_KEY = open(path.join(rootDir, "public.pem")).read()
 
 RESET_PASS_EMAIL_TEXT_TEMPLATE = get_template('reset_password.txt')
