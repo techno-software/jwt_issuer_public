@@ -4,12 +4,6 @@ services:
     jwt:
         build: .
         restart: always
-        command: >
-            bash -c " cd /project/jwtController
-            && python3 manage.py makemigrations
-            && python3 manage.py migrate
-            && source /project/py-env/bin/activate
-            && gunicorn jwtController.wsgi:application --bind 0.0.0.0:8000 -w 8"
         ports:
         - "8000:8000"
         volumes:

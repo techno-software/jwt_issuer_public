@@ -1,4 +1,4 @@
-# Soo what is this
+# What this application does
 
 The gist of this django api is to provide a simple way to manage user logins in your app using JWT. On purpose, it provides very limited capabilities so that it's as reusable as possbile. Here's a quick API endpoint rundown:
 
