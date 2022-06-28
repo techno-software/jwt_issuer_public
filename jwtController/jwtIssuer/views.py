@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from .models import *
 
@@ -30,7 +31,6 @@ def auth(req):
             username = obj['username']
             password = obj['password']
             user = authenticate(req, username=username, password=password)
-            print(user)
         except:
             return JsonResponse({"code": "400", "message": "Bad request body"}, status=400, safe=False)
 
@@ -125,7 +125,34 @@ def reset_user_password(req):
         return JsonResponse({"code": "405", "message": "Bad request type, use POST method with json body for this route"}, status=405, safe=False)
 
 
+def getAllUserIDs(req):
+    if req.method == "GET":
+        if req.COOKIES.get(JWT_TOKEN_COOKIE_NAME):
+            # user needs to be admin to reset other user passwords
+            if req.COOKIES.get(JWT_PERMISSIONS_COOKIE_NAME):
+                auth_token = validateJWT(req.COOKIES.get(JWT_TOKEN_COOKIE_NAME))  # nopep8
+                perm_token = validateJWT(req.COOKIES.get(JWT_PERMISSIONS_COOKIE_NAME))  # nopep8
+                # validate cookies
+                if (auth_token):
+                    if (perm_token):
+                        if (userIsAdmin(perm_token, auth_token)):
+                            User = get_user_model()
+                            users = User.objects.all()
+
+                            response = []
+                            for user in users:
+                                response.append(user.id)
+
+                            return JsonResponse({"code": "200", "ids": response}, status=200, safe=False)
+                        else:
+                            return JsonResponse({"code": "403", "message": "Permission token problem"}, status=403, safe=False)
+        return JsonResponse({"code": "400", "message": "Bad request cookies"}, status=400, safe=False)
+    else:
+        return JsonResponse({"code": "405", "message": "Bad request type, use GET method for this route"}, status=405, safe=False)
+
 # util routes
+
+
 def renew_jwt_token(req):
     if req.body and req.method == "POST":
         if req.COOKIES.get(JWT_TOKEN_COOKIE_NAME):
