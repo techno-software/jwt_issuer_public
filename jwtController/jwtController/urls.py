@@ -23,10 +23,8 @@ urlpatterns = [
     path('auth', views.auth, name="auth"),
     path('renew_token', views.renew_jwt_token, name="renew_jwt_token"),
     path('register', views.register, name="register"),
+    path('reset_user_password', views.reset_user_password, name="reset_user_password"),  # nopep8
     path('update_profile', views.update_profile, name="update_profile"),
-    path('request_password_reset', views.request_password_reset,
-         name="request_password_reset"),
-    path('reset_password', views.reset_password, name="reset_password"),
     path('get_public_cert', views.get_public_cert, name="get_public_cert"),
 
 ]
