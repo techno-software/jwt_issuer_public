@@ -32,22 +32,22 @@ def auth(req):
             password = obj['password']
             user = authenticate(req, username=username, password=password)
         except:
-            return JsonResponse({"code": "400", "message": "Bad request body"}, status=400, safe=False)
+            return JsonResponse({"status": "400", "message": "Bad request body"}, status=400, safe=False)
 
         if user is not None:
             token = issueJWT(user.id)
 
             response = JsonResponse(
-                {"code": "200", "message": "User authenticated", 'token': token}, status=200, safe=False)
+                {"status": "200", "message": "User authenticated", 'token': token}, status=200, safe=False)
             cookie_expiry = datetime.now() + timedelta(days=COOKIE_TIME_TO_LIVE_DAYS)
             response.set_cookie(JWT_TOKEN_COOKIE_NAME,
                                 token, expires=cookie_expiry)
             return response
         else:
-            return JsonResponse({"code": "403", "message": "User not authenticated"}, status=403, safe=False)
+            return JsonResponse({"status": "403", "message": "User not authenticated"}, status=403, safe=False)
 
     else:
-        return JsonResponse({"code": "405", "message": "Bad request type, use POST method with json body for this route"}, status=405, safe=False)
+        return JsonResponse({"status": "405", "message": "Bad request type, use POST method with json body for this route"}, status=405, safe=False)
 
 
 def register(req):
@@ -57,19 +57,19 @@ def register(req):
             username = obj['username']
             password = obj['password']
         except:
-            return JsonResponse({"code": "400", "message": "Bad request"}, status=400, safe=False)
+            return JsonResponse({"status": "400", "message": "Bad request"}, status=400, safe=False)
 
         try:
             if User.objects.get(username=username):
-                return JsonResponse({"code": "400", "message": "Username already in use"}, status=400, safe=False)
+                return JsonResponse({"status": "400", "message": "Username already in use"}, status=400, safe=False)
         except:
             pass
 
         user = User.objects.create_user(username=username, password=password)
         user.save()
-        return JsonResponse({"code": "200", "message": "User registered"}, status=200, safe=False)
+        return JsonResponse({"status": "200", "message": "User registered"}, status=200, safe=False)
     else:
-        return JsonResponse({"code": "405", "message": "Bad request type, use POST method with json body for this route"}, status=405, safe=False)
+        return JsonResponse({"status": "405", "message": "Bad request type, use POST method with json body for this route"}, status=405, safe=False)
 
 
 def update_profile(req):
@@ -86,14 +86,14 @@ def update_profile(req):
                         user.set_password(password)
                         user.save()
                     else:
-                        return JsonResponse({"code": "404", "message": "User not found"}, status=404, safe=False)
+                        return JsonResponse({"status": "404", "message": "User not found"}, status=404, safe=False)
                 except:
                     pass
 
-                return JsonResponse({"code": "200"}, status=200, safe=False)
-        return JsonResponse({"code": "400", "message": "Invalid or missing "+JWT_TOKEN_COOKIE_NAME+" cookie"}, status=400, safe=False)
+                return JsonResponse({"status": "200"}, status=200, safe=False)
+        return JsonResponse({"status": "400", "message": "Invalid or missing "+JWT_TOKEN_COOKIE_NAME+" cookie"}, status=400, safe=False)
     else:
-        return JsonResponse({"code": "405", "message": "Bad request type, use POST method with json body for this route"}, status=405, safe=False)
+        return JsonResponse({"status": "405", "message": "Bad request type, use POST method with json body for this route"}, status=405, safe=False)
 
 
 # admin management
@@ -115,14 +115,14 @@ def reset_user_password(req):
                                 user.set_password(obj['new_password'])
                                 user.save()
                             else:
-                                return JsonResponse({"code": "404", "message": "User not found"}, status=404, safe=False)
+                                return JsonResponse({"status": "404", "message": "User not found"}, status=404, safe=False)
 
-                            return JsonResponse({"code": "200", "message": "User password has been reset"}, status=200, safe=False)
+                            return JsonResponse({"status": "200", "message": "User password has been reset"}, status=200, safe=False)
                         else:
-                            return JsonResponse({"code": "403", "message": "Permission token problem"}, status=403, safe=False)
-        return JsonResponse({"code": "400", "message": "Bad request cookies"}, status=400, safe=False)
+                            return JsonResponse({"status": "403", "message": "Permission token problem"}, status=403, safe=False)
+        return JsonResponse({"status": "400", "message": "Bad request cookies"}, status=400, safe=False)
     else:
-        return JsonResponse({"code": "405", "message": "Bad request type, use POST method with json body for this route"}, status=405, safe=False)
+        return JsonResponse({"status": "405", "message": "Bad request type, use POST method with json body for this route"}, status=405, safe=False)
 
 
 def getAllUserIDs(req):
@@ -143,12 +143,12 @@ def getAllUserIDs(req):
                             for user in users:
                                 response.append(user.id)
 
-                            return JsonResponse({"code": "200", "ids": response}, status=200, safe=False)
+                            return JsonResponse({"status": "200", "ids": response}, status=200, safe=False)
                         else:
-                            return JsonResponse({"code": "403", "message": "Permission token problem"}, status=403, safe=False)
-        return JsonResponse({"code": "400", "message": "Bad request cookies"}, status=400, safe=False)
+                            return JsonResponse({"status": "403", "message": "Permission token problem"}, status=403, safe=False)
+        return JsonResponse({"status": "400", "message": "Bad request cookies"}, status=400, safe=False)
     else:
-        return JsonResponse({"code": "405", "message": "Bad request type, use GET method for this route"}, status=405, safe=False)
+        return JsonResponse({"status": "405", "message": "Bad request type, use GET method for this route"}, status=405, safe=False)
 
 # util routes
 
@@ -161,23 +161,23 @@ def renew_jwt_token(req):
                 new_token = issueJWT(old_token['userID'])
 
                 response = JsonResponse(
-                    {"code": "200", "message": "User authenticated", 'token': new_token}, status=200, safe=False)
+                    {"status": "200", "message": "User authenticated", 'token': new_token}, status=200, safe=False)
                 cookie_expiry = datetime.now() + timedelta(days=COOKIE_TIME_TO_LIVE_DAYS)
                 response.set_cookie(JWT_TOKEN_COOKIE_NAME, new_token, expires=cookie_expiry)  # nopep8
                 return response
             else:
-                return JsonResponse({"code": "400", "message": "Invalid or missing "+JWT_TOKEN_COOKIE_NAME+" cookie"}, status=400, safe=False)
+                return JsonResponse({"status": "400", "message": "Invalid or missing "+JWT_TOKEN_COOKIE_NAME+" cookie"}, status=400, safe=False)
         else:
-            return JsonResponse({"code": "401", "message": "JWT Cookie not included in request"}, status=401, safe=False)
+            return JsonResponse({"status": "401", "message": "JWT Cookie not included in request"}, status=401, safe=False)
     else:
-        return JsonResponse({"code": "405", "message": "Bad request type, use POST method with json body for this route"}, status=405, safe=False)
+        return JsonResponse({"status": "405", "message": "Bad request type, use POST method with json body for this route"}, status=405, safe=False)
 
 
 def get_public_cert(req):
     if req.method == "GET":
-        return JsonResponse({"code": "200", "public_key": JWT_PUBLIC_KEY}, status=200, safe=False)
+        return JsonResponse({"status": "200", "public_key": JWT_PUBLIC_KEY}, status=200, safe=False)
     else:
-        return JsonResponse({"code": "405", "message": "Bad request type, use GET method for this route"}, status=405, safe=False)
+        return JsonResponse({"status": "405", "message": "Bad request type, use GET method for this route"}, status=405, safe=False)
 
 
 # util functions

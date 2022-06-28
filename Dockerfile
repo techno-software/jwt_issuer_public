@@ -15,13 +15,13 @@ WORKDIR /project
 COPY ./static_files/startup.sh /project/startup.sh
 RUN chmod +x /project/startup.sh
 
+# setup application user
+RUN adduser --disabled-password appuser
+
 # setup project
 COPY requirements.txt /project/
 RUN pip3 install -r requirements.txt
 COPY ./jwtController /project/jwtController
-
-# setup application user
-RUN adduser --disabled-password appuser
 RUN chown -R appuser /project
 
 # set entrypoint

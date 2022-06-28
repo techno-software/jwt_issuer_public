@@ -32,6 +32,10 @@ Returns the status of the service (`OK`), the current time and the uptime of the
 ### `/get_public_cert`
 Returns the public key that can be used to validate the JWT tokens issues by the server in a json with a `status` field and a `public_key` field
 
+### `/all_users`
+* Send a request with valid `jwt_cookie` and `jwt_permissions` cookies in the header and receive a list of all userIDs registered in the system 
+* Returns a json with a `data` field
+
 # More info
 
 Don't forget to edit the password reset templates under `jwtController/jwtIssuer/templates`
