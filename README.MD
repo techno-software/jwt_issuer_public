@@ -10,7 +10,13 @@ The gist of this django api is to provide a simple way to manage user logins in 
 
 ### `/register`
 * Requires `username`, `password` and `email` to be set in the body of the request in json
-* Returns a json with a `status` field
+* Returns a json with `status` and `data` fields. The `data` field contains data of the format:
+```
+"data": {
+		    "userID": int,
+		    "username": String
+	    }
+```
 
 ### `/update_profile`
 * Takes either a `password` or a `email` (or both) in the body of the request in json form. Also requries a valid `jwt_token` cookie to be sent along with the request

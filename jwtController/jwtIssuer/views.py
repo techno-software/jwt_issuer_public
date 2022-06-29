@@ -61,13 +61,19 @@ def register(req):
 
         try:
             if User.objects.get(username=username):
-                return JsonResponse({"status": "400", "message": "Username already in use"}, status=400, safe=False)
+                return JsonResponse({"status": "409", "message": "Username already in use"}, status=400, safe=False)
         except:
             pass
 
         user = User.objects.create_user(username=username, password=password)
         user.save()
-        return JsonResponse({"status": "200", "message": "User registered"}, status=200, safe=False)
+
+        responseData = {
+            "userID": user.id,
+            "username": user.username
+        }
+
+        return JsonResponse({"status": "200", "message": "User registered", "data": responseData}, status=200, safe=False)
     else:
         return JsonResponse({"status": "405", "message": "Bad request type, use POST method with json body for this route"}, status=405, safe=False)
 
