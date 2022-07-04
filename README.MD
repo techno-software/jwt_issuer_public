@@ -40,7 +40,18 @@ Returns the public key that can be used to validate the JWT tokens issues by the
 
 ### `/all_users`
 * Send a request with valid `jwt_cookie` and `jwt_permissions` cookies in the header and receive a list of all userIDs registered in the system 
-* Returns a json with a `data` field
+* Returns a json with a `users` field in the following format:
+```
+{
+	"status": "200",
+	"users": [
+		{
+			"id": int,
+			"username": String
+		}
+	]
+}
+```
 
 # More info
 

@@ -131,10 +131,9 @@ def reset_user_password(req):
         return JsonResponse({"status": "405", "message": "Bad request type, use POST method with json body for this route"}, status=405, safe=False)
 
 
-def getAllUserIDs(req):
+def getAllUsers(req):
     if req.method == "GET":
         if req.COOKIES.get(JWT_TOKEN_COOKIE_NAME):
-            # user needs to be admin to reset other user passwords
             if req.COOKIES.get(JWT_PERMISSIONS_COOKIE_NAME):
                 auth_token = validateJWT(req.COOKIES.get(JWT_TOKEN_COOKIE_NAME))  # nopep8
                 perm_token = validateJWT(req.COOKIES.get(JWT_PERMISSIONS_COOKIE_NAME))  # nopep8
@@ -147,9 +146,12 @@ def getAllUserIDs(req):
 
                             response = []
                             for user in users:
-                                response.append(user.id)
+                                response.append({
+                                    "id": user.id,
+                                    "username": user.username
+                                })
 
-                            return JsonResponse({"status": "200", "ids": response}, status=200, safe=False)
+                            return JsonResponse({"status": "200", "users": response}, status=200, safe=False)
                         else:
                             return JsonResponse({"status": "403", "message": "Permission token problem"}, status=403, safe=False)
         return JsonResponse({"status": "400", "message": "Bad request cookies"}, status=400, safe=False)
