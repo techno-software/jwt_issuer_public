@@ -41,7 +41,7 @@ def auth(req):
                 {"status": "200", "message": "User authenticated", 'token': token}, status=200, safe=False)
             cookie_expiry = datetime.now() + timedelta(days=COOKIE_TIME_TO_LIVE_DAYS)
             response.set_cookie(JWT_TOKEN_COOKIE_NAME,
-                                token, expires=cookie_expiry)
+                                token, expires=cookie_expiry, samesite='Strict', secure=True)
             return response
         else:
             return JsonResponse({"status": "403", "message": "User not authenticated"}, status=403, safe=False)
@@ -158,9 +158,8 @@ def getAllUsers(req):
     else:
         return JsonResponse({"status": "405", "message": "Bad request type, use GET method for this route"}, status=405, safe=False)
 
+
 # util routes
-
-
 def renew_jwt_token(req):
     if req.body and req.method == "POST":
         if req.COOKIES.get(JWT_TOKEN_COOKIE_NAME):
@@ -171,7 +170,7 @@ def renew_jwt_token(req):
                 response = JsonResponse(
                     {"status": "200", "message": "User authenticated", 'token': new_token}, status=200, safe=False)
                 cookie_expiry = datetime.now() + timedelta(days=COOKIE_TIME_TO_LIVE_DAYS)
-                response.set_cookie(JWT_TOKEN_COOKIE_NAME, new_token, expires=cookie_expiry)  # nopep8
+                response.set_cookie(JWT_TOKEN_COOKIE_NAME, new_token, expires=cookie_expiry, samesite='Strict', secure=True)  # nopep8
                 return response
             else:
                 return JsonResponse({"status": "400", "message": "Invalid or missing "+JWT_TOKEN_COOKIE_NAME+" cookie"}, status=400, safe=False)
