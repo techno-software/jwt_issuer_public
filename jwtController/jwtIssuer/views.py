@@ -113,15 +113,16 @@ def reset_user_password(req):
                 # validate cookies
                 if (auth_token):
                     if (perm_token):
-                        if (userIsAdmin(perm_token, auth_token)):
-                            obj = json.loads(req.body)
-                            user = User.objects.get(id=obj['jwt_id'])
+                        obj = json.loads(req.body)
 
-                            if user:
-                                user.set_password(obj['new_password'])
-                                user.save()
-                            else:
-                                return JsonResponse({"status": "404", "message": "User not found"}, status=404, safe=False)
+                        try:
+                            user = User.objects.get(id=obj['jwt_id'])
+                        except:
+                            return JsonResponse({"status": "404", "message": "User not found"}, status=404, safe=False)
+
+                        if (userIsAdmin(perm_token, auth_token) or int(obj['jwt_id']) == int(auth_token['userID'])):
+                            user.set_password(obj['new_password'])
+                            user.save()
 
                             return JsonResponse({"status": "200", "message": "User password has been reset"}, status=200, safe=False)
                         else:
