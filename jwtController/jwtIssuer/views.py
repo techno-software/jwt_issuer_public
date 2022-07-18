@@ -159,6 +159,35 @@ def getAllUsers(req):
         return JsonResponse({"status": "405", "message": "Bad request type, use GET method for this route"}, status=405, safe=False)
 
 
+def delete_user(req, user_id):
+    if req.method == "DELETE":
+        if req.COOKIES.get(JWT_TOKEN_COOKIE_NAME):
+            # user needs to be admin to reset other user passwords
+            if req.COOKIES.get(JWT_PERMISSIONS_COOKIE_NAME):
+                auth_token = validateJWT(req.COOKIES.get(JWT_TOKEN_COOKIE_NAME))  # nopep8
+                perm_token = validateJWT(req.COOKIES.get(JWT_PERMISSIONS_COOKIE_NAME))  # nopep8
+                # validate cookies
+                if (auth_token):
+                    if (perm_token):
+                        if (userIsAdmin(perm_token, auth_token)):
+                            # user cannot delete their own profile
+                            if (int(auth_token['userID']) == int(user_id)):
+                                return JsonResponse({"status": "403", "message": "User cannot delete their own profile"}, status=403, safe=False)
+
+                            user = User.objects.get(id=user_id)
+                            if not user:
+                                return JsonResponse({"status": "404", "message": "User not found"}, status=404, safe=False)
+
+                            user.delete()
+
+                            return JsonResponse({"status": "200", "message": "User has been deleted"}, status=200, safe=False)
+                        else:
+                            return JsonResponse({"status": "403", "message": "Permission token problem"}, status=403, safe=False)
+        return JsonResponse({"status": "400", "message": "Bad request cookies"}, status=400, safe=False)
+    else:
+        return JsonResponse({"status": "405", "message": "Bad request type, use DELETE method for this route"}, status=405, safe=False)
+
+
 # util routes
 def renew_jwt_token(req):
     if req.body and req.method == "POST":

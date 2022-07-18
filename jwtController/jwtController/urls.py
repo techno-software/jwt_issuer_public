@@ -25,6 +25,7 @@ urlpatterns = [
     path('register', views.register, name="register"),
     path('all_users', views.getAllUsers, name="all_users"),
     path('reset_user_password', views.reset_user_password, name="reset_user_password"),  # nopep8
+    path('delete/<user_id>/', views.delete_user, name="delete_user"),  # nopep8
     path('update_profile', views.update_profile, name="update_profile"),
     path('get_public_cert', views.get_public_cert, name="get_public_cert"),
 

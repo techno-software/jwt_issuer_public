@@ -30,6 +30,12 @@ The gist of this django api is to provide a simple way to manage user logins in 
 * Send a request with valid `jwt_cookie` and `jwt_permissions` cookies in the header as well as an `jwt_id` and `new_password` in the body for the user will get the new password 
 * Returns a json with a `status` field
 
+## DELETE routes
+
+### `/delete/<user_id>`
+* Send a request with valid `jwt_cookie` and `jwt_permissions` cookies in the header as well as a `user_id` as a URL paramater and the user will be deleted. Note that to delete users, the request sender must have the `admin` role in their `jwt_permissions` cookie and the target `user_id` must be different than their own!
+* Returns a json with a `status` field
+
 ## GET routes
 
 ### `/liveliness`
